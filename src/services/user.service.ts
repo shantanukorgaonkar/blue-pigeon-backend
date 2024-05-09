@@ -12,7 +12,7 @@ export const addUser = async (user: IUser) => {
 
 }
 
-export const findUserById = async (id: Types.ObjectId) => {
+export const findUserById = async (id: string) => {
     try {
         const result = await UserModel.findById(id).select('-password');
         return result;

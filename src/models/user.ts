@@ -2,7 +2,7 @@ import mongoose, { Types } from 'mongoose';
 const { Schema } = mongoose;
 
 export interface IUser {
-    _id: Types.ObjectId
+    id: number
     firstName: string;
     lastName: string;
     email: string;
