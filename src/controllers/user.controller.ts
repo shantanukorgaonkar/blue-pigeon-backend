@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { IUser, UserModel } from '../models/user';
-import { addUser, findUserByEmail, findUserById } from '../services/user.service';
+import { addUser, findUserByEmail, findUserById, updateUser } from '../services/user.service';
 import { generateJwtWebToken, hashPassword, sendError, sendSuccess, verifyPassword } from '../utils/utils';
 import { RequestWithUser } from '../middleware/auth';
+import { IUpdateUserProfileDto, IUserLoginDto, IUserRegistrationDto } from '../dto/user/user.dto';
 
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, res: Response) => {
     if (req.user) {
         return sendError(res, 400, "User Already Exists");
     }
@@ -50,7 +51,7 @@ export const getSelf = async (req: RequestWithUser, res: Response) => {
         return sendError(res, 400, error.message)
     }
 }
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request<{}, {}, IUserLoginDto>, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return sendError(res, 400, "Invalid Request");
@@ -67,6 +68,29 @@ export const loginUser = async (req: Request, res: Response) => {
             return sendSuccess(res, 200, "Logged In", response)
         } else {
             return sendError(res, 400, "Incorrect Password")
+        }
+    } catch (error) {
+        console.log(error)
+        return sendError(res, 400, error.message)
+    }
+}
+
+export const updateUserProfile = async (req: RequestWithUser<IUpdateUserProfileDto>, res: Response) => {
+    const { industry, interests, username, email, firstName, lastName } = req.body;
+    const userId = req.userId
+    try {
+        const user = await findUserById(userId);
+        if (!user) {
+            return sendError(res, 404, "User Does not exist");
+        } else {
+            user.email = email
+            user.firstName = firstName
+            user.lastName = lastName
+            user.industry = industry
+            user.interests = interests
+            user.username = username
+            const updatedUser = await updateUser(userId, user)
+            return sendSuccess(res, 200, "User Updated.", updatedUser)
         }
     } catch (error) {
         console.log(error)

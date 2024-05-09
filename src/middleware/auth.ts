@@ -9,7 +9,7 @@ import { findUserById } from '../services/user.service';
 export interface IToken extends jwt.JwtPayload {
     id: string
 }
-export interface RequestWithUser extends Request {
+export interface RequestWithUser<T = any> extends Request<{}, {}, T> {
     userId: string
 }
 

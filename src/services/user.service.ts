@@ -4,7 +4,6 @@ import { IUser, UserModel } from "../models/user";
 export const addUser = async (user: IUser) => {
     try {
         const result = await UserModel.create<IUser>(user);
-
         return result;
     } catch (error) {
         throw error;
@@ -30,15 +29,21 @@ export const findUserByEmail = async (email: string) => {
     }
 }
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: string) => {
     try {
         const result = await UserModel.findByIdAndDelete(id)
         return result;
     } catch (error) {
         throw error;
     }
-
 }
 
-
+export const updateUser = async (id: string, user: IUser) => {
+    try {
+        const result = await UserModel.findByIdAndUpdate(id, user, { new: true })
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 
