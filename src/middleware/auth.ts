@@ -30,7 +30,6 @@ export const verifyAuth = async (req: RequestWithUser, res: Response, next: Next
                 return sendError(res, 404, "User does not exist")
             } else {
                 req.userId = user.id
-                console.log(req.user)
             }
             next();
         } catch (error) {
