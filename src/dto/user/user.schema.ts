@@ -17,6 +17,6 @@ export const updateUserProfileSchema = z.object({
     lastName: z.string().optional(),
     email: z.string().email().optional(),
     username: z.string().optional(),
-    interests: z.string().array().optional(),
-    industry: z.string().array().optional(),
+    interests: z.string().array().min(3).optional(),
+    industries: z.string().array().optional(),
 });

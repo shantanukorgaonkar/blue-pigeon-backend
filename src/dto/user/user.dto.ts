@@ -12,7 +12,7 @@ export interface IUserLoginDto {
 
 export interface IUpdateUserProfileDto {
     interests: string[],
-    industry: string[],
+    industries: string[],
     username: string,
     firstName: string,
     lastName: string,

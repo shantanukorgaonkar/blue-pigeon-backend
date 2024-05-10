@@ -5,6 +5,7 @@ async function ConnectDB() {
         if (!process.env.MONGO_URL) {
             throw new Error("DB connection string missing.")
         }
+        
         mongoose.connect(process.env.MONGO_URL).then(() => {
             console.log("DB connected")
         })

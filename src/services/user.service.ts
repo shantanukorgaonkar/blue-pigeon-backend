@@ -13,7 +13,7 @@ export const addUser = async (user: IUser) => {
 
 export const findUserById = async (id: string) => {
     try {
-        const result = await UserModel.findById(id).select('-password');
+        const result = await UserModel.findById(id).select('-password').populate(['interests','industries']);
         return result;
     } catch (error) {
         throw error

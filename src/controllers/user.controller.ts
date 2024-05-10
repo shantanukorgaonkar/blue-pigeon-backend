@@ -5,6 +5,10 @@ import { generateJwtWebToken, hashPassword, sendError, sendSuccess, verifyPasswo
 import { RequestWithUser } from '../middleware/auth';
 import { IUpdateUserProfileDto, IUserLoginDto, IUserRegistrationDto } from '../dto/user/user.dto';
 import { findByUserId } from '../services/post.service';
+import { createFriend, findFriendsByUser } from '../services/friend-list.service';
+import { FriendListModel } from '../models/friend-list';
+import { ObjectId } from 'mongodb';
+import { IFriendRequestDto } from '../dto/friend-request/friend-request.dto';
 
 
 export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, res: Response) => {
@@ -76,7 +80,7 @@ export const loginUser = async (req: Request<{}, {}, IUserLoginDto>, res: Respon
 }
 
 export const updateUserProfile = async (req: RequestWithUser<IUpdateUserProfileDto>, res: Response) => {
-    const { industry, interests, username, email, firstName, lastName } = req.body;
+    const { industries, interests, username, email, firstName, lastName } = req.body;
     const userId = req.userId
     try {
         const user = await findUserById(userId);
@@ -86,7 +90,7 @@ export const updateUserProfile = async (req: RequestWithUser<IUpdateUserProfileD
             user.email = email
             user.firstName = firstName
             user.lastName = lastName
-            user.industry = industry
+            user.industries = industries
             user.interests = interests
             user.username = username
             const updatedUser = await updateUser(userId, user)
@@ -102,6 +106,37 @@ export const getPosts = async (req: RequestWithUser, res: Response) => {
     try {
         const posts = await findByUserId(req.userId)
         return sendSuccess(res, 200, "Posts found.", posts)
+    } catch (error) {
+        sendError(res, 500, error.message)
+    }
+}
+
+export const addFriend = async (req: RequestWithUser<IFriendRequestDto>, res: Response) => {
+    try {
+        const friendRequest = new FriendListModel()
+        friendRequest.sender = new ObjectId(req.userId)
+        friendRequest.receiver = new ObjectId(req.body.receiverId)
+        const newFriend = await createFriend(friendRequest)
+        return sendSuccess(res, 200, "Posts found.", newFriend)
+    } catch (error) {
+        sendError(res, 500, error.message)
+    }
+}
+
+export const getFriends = async (req: RequestWithUser, res: Response) => {
+    try {
+
+        const friendList = await findFriendsByUser(req.userId)
+        const friends = friendList.map((friend) => {
+            if (friend.sender._id.toString() === req.userId) {
+                return friend.receiver
+            } else if (friend.receiver._id.toString() === req.userId) {
+                return friend.sender
+            } else {
+                throw new Error("User not found in the friend list.")
+            }
+        })
+        return sendSuccess(res, 200, "Posts found.", friends)
     } catch (error) {
         sendError(res, 500, error.message)
     }
