@@ -12,6 +12,7 @@ app.use(json())
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/posts', postRouter)
+app.use('/api/v1/media', express.static('uploads'))
 
 app.listen(3000, () => console.log("SEREVER UP"))
 

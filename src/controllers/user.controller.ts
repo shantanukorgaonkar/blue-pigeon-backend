@@ -4,6 +4,7 @@ import { addUser, findUserByEmail, findUserById, updateUser } from '../services/
 import { generateJwtWebToken, hashPassword, sendError, sendSuccess, verifyPassword } from '../utils/utils';
 import { RequestWithUser } from '../middleware/auth';
 import { IUpdateUserProfileDto, IUserLoginDto, IUserRegistrationDto } from '../dto/user/user.dto';
+import { findByUserId } from '../services/post.service';
 
 
 export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, res: Response) => {
@@ -30,9 +31,8 @@ export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, r
             return sendError(res, 400, "Invalid User Data")
         }
     } catch (error) {
-
         console.log(error);
-        return sendError(res, 400, error.message)
+        return sendError(res, 500, error.message)
     }
 }
 
@@ -48,7 +48,7 @@ export const getSelf = async (req: RequestWithUser, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        return sendError(res, 400, error.message)
+        return sendError(res, 500, error.message)
     }
 }
 export const loginUser = async (req: Request<{}, {}, IUserLoginDto>, res: Response) => {
@@ -71,7 +71,7 @@ export const loginUser = async (req: Request<{}, {}, IUserLoginDto>, res: Respon
         }
     } catch (error) {
         console.log(error)
-        return sendError(res, 400, error.message)
+        return sendError(res, 500, error.message)
     }
 }
 
@@ -94,6 +94,15 @@ export const updateUserProfile = async (req: RequestWithUser<IUpdateUserProfileD
         }
     } catch (error) {
         console.log(error)
-        return sendError(res, 400, error.message)
+        return sendError(res, 500, error.message)
+    }
+}
+
+export const getPosts = async (req: RequestWithUser, res: Response) => {
+    try {
+        const posts = await findByUserId(req.userId)
+        return sendSuccess(res, 200, "Posts found.", posts)
+    } catch (error) {
+        sendError(res, 500, error.message)
     }
 }

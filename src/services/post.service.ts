@@ -18,7 +18,7 @@ export const findAll = async () => {
     }
 }
 
-export const findbyUserId = async (userId: string) => {
+export const findByUserId = async (userId: string) => {
     try {
         const posts = PostModel.find({ user: { _id: userId } })
         return posts

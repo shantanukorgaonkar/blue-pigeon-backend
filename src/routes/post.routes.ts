@@ -1,9 +1,11 @@
 import express from "express";
 import { verifyAuth } from "../middleware/auth";
-import { addPost } from "../controllers/post.controller";
-import upload from "../middleware/file-upload";
+import { addPost, getAllPosts } from "../controllers/post.controller";
+
 const router = express.Router();
 
-router.post('/create', [verifyAuth,upload.array('media[]')], addPost);
+router.post('/create', [verifyAuth], addPost);
+router.get('/', [verifyAuth], getAllPosts);
+
 
 export default router
