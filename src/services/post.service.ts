@@ -20,7 +20,7 @@ export const findAll = async () => {
 
 export const findByUserId = async (userId: string) => {
     try {
-        const posts = PostModel.find({ user: { _id: userId } }).populate('user')
+        const posts = PostModel.find({ user: { _id: userId } })
         return posts
     } catch (error) {
         throw error

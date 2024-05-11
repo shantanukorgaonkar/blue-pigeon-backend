@@ -29,7 +29,7 @@ export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, r
         const createduser = await addUser(user);
         if (createduser) {
             const jwtToken = generateJwtWebToken(createduser.id);
-            const response = { id: createduser.id, email: createduser.email, token: jwtToken }
+            const response = { id: createduser.id, token: jwtToken }
             return sendSuccess(res, 201, "User is created", response)
         } else {
             return sendError(res, 400, "Invalid User Data")
@@ -68,7 +68,7 @@ export const loginUser = async (req: Request<{}, {}, IUserLoginDto>, res: Respon
         const isPasswordValid = await verifyPassword(password, user.password);
         if (isPasswordValid) {
             const jwtToken = generateJwtWebToken(user.id);
-            const response = { id: user.id, email: user.email, token: jwtToken }
+            const response = { id: user.id, token: jwtToken }
             return sendSuccess(res, 200, "Logged In", response)
         } else {
             return sendError(res, 400, "Incorrect Password")
@@ -117,7 +117,7 @@ export const addFriend = async (req: RequestWithUser<IFriendRequestDto>, res: Re
         friendRequest.sender = new ObjectId(req.userId)
         friendRequest.receiver = new ObjectId(req.body.receiverId)
         const newFriend = await createFriend(friendRequest)
-        return sendSuccess(res, 200, "Posts found.", newFriend)
+        return sendSuccess(res, 200, "Friend Added", { id: newFriend._id, senderId: newFriend.sender._id, receiverId: newFriend.receiver._id })
     } catch (error) {
         sendError(res, 500, error.message)
     }
@@ -136,7 +136,7 @@ export const getFriends = async (req: RequestWithUser, res: Response) => {
                 throw new Error("User not found in the friend list.")
             }
         })
-        return sendSuccess(res, 200, "Posts found.", friends)
+        return sendSuccess(res, 200, "Users found.", friends)
     } catch (error) {
         sendError(res, 500, error.message)
     }

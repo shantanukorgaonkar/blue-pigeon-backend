@@ -6,6 +6,7 @@ import postRouter from './routes/post.routes'
 import interestsRouter from './routes/interests.routes'
 import industriesRouter from './routes/industries.routes'
 import cors from 'cors';
+import 'dotenv/config'
 
 const app = express()
 ConnectDB()
@@ -18,6 +19,6 @@ app.use('/api/v1/interests', interestsRouter)
 app.use('/api/v1/industries', industriesRouter)
 app.use('/api/v1/media', express.static('uploads'))
 
-app.listen(3000, () => console.log("SEREVER UP"))
+app.listen(process.env.PORT, () => console.log("SEREVER UP"))
 
 export default app

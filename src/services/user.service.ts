@@ -40,7 +40,7 @@ export const deleteUser = async (id: string) => {
 
 export const updateUser = async (id: string, user: IUser) => {
     try {
-        const result = await UserModel.findByIdAndUpdate(id, user, { new: true })
+        const result = await UserModel.findByIdAndUpdate(id, user, { new: true }).select(["-password","-createdAt","-updatedAt"])
         return result;
     } catch (error) {
         throw error;
