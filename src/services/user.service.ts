@@ -47,3 +47,12 @@ export const updateUser = async (id: string, user: IUser) => {
     }
 }
 
+
+export const findAllUsers = async (id: string) => {
+    try {
+        const result = await UserModel.find({}).select('-password').populate(['interests','industries']);
+        return result;
+    } catch (error) {
+        throw error
+    }
+}

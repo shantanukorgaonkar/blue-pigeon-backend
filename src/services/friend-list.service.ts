@@ -14,8 +14,6 @@ export const findFriendsByUser = async (userId: string) => {
 
     try {
         const friends = await FriendListModel.find({ $or: [{ sender: userId }, { receiver: userId }] })
-            .populate({ path: 'sender', select: ["-password", "-createdAt", "-updatedAt"] })
-            .populate({ path: 'receiver', select: ["-password", "-createdAt", "-updatedAt"] })
         return friends
     } catch (error) {
         throw error

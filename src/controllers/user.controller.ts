@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import { IUser, UserModel } from '../models/user';
-import { addUser, findUserByEmail, findUserById, updateUser } from '../services/user.service';
-import { generateJwtWebToken, hashPassword, sendError, sendSuccess, verifyPassword } from '../utils/utils';
-import { RequestWithUser } from '../middleware/auth';
-import { IUpdateUserProfileDto, IUserLoginDto, IUserRegistrationDto } from '../dto/user/user.dto';
-import { findByUserId } from '../services/post.service';
-import { createFriend, findFriendsByUser } from '../services/friend-list.service';
-import { FriendListModel } from '../models/friend-list';
 import { ObjectId } from 'mongodb';
 import { IFriendRequestDto } from '../dto/friend-request/friend-request.dto';
+import { IUpdateUserProfileDto, IUserLoginDto, IUserRegistrationDto } from '../dto/user/user.dto';
+import { RequestWithUser } from '../middleware/auth';
+import { FriendListModel } from '../models/friend-list';
+import { UserModel } from '../models/user';
+import { createFriend, findFriendsByUser } from '../services/friend-list.service';
+import { findByUserId } from '../services/post.service';
+import { addUser, findAllUsers, findUserByEmail, findUserById, updateUser } from '../services/user.service';
+import { generateJwtWebToken, hashPassword, sendError, sendSuccess, verifyPassword } from '../utils/utils';
 
 
 export const registerUser = async (req: Request<{}, {}, IUserRegistrationDto>, res: Response) => {
@@ -137,6 +137,14 @@ export const getFriends = async (req: RequestWithUser, res: Response) => {
             }
         })
         return sendSuccess(res, 200, "Users found.", friends)
+    } catch (error) {
+        sendError(res, 500, error.message)
+    }
+}
+export const getAllUsers = async (req: RequestWithUser, res: Response) => {
+    try {
+        const posts = await findAllUsers(req.userId)
+        return sendSuccess(res, 200, "Posts found.", posts)
     } catch (error) {
         sendError(res, 500, error.message)
     }
