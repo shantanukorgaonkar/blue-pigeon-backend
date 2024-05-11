@@ -6,6 +6,12 @@ In the project directory, you can run:
 
 Runs the app in the development mode at http://localhost:3000
 
-I have uploaded the .env file so that you can configure the db seamlessly although this is not a good practice.
+Add a .env file at the root of the project. File should be as follows:
+
+MONGO_PASSWORD=yourpassword
+MONGO_USER=youruser
+MONGO_URL=yourconnectionstring
+JWT_SECRET=yoursecret
+PORT=yourport
 
 For the frontend repo please visit : https://github.com/shantanukorgaonkar/blue-pigeon-app-web
